@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All-in-One Web Project</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header, footer { background: #333; color: #fff; padding: 1rem; text-align: center; }
+    nav a { color: #fff; margin: 0 1rem; text-decoration: none; }
+    section { padding: 2rem; }
+    input, button, select, textarea { padding: 10px; margin: 10px 0; width: 100%; max-width: 400px; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px; background: #e3f2fd; margin: 5px 0; border-left: 5px solid #0077cc; border-radius: 4px; }
+    .products { display: flex; flex-wrap: wrap; gap: 10px; }
+    .product { border: 1px solid #ccc; padding: 10px; width: calc(33.3% - 20px); }
+    @media (max-width: 768px) {
+      .product { width: 100%; }
+    }
+  </style>
+</head>
+<body bgcolor="lightpink">
+  <header>
+    <h1>Varshi's Web Development Project</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#todo">To-Do List</a>
+      <a href="#products">Products</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Portfolio Section -->
+  <section id="about">
+    <h2>About Me</h2>
+    <p>I am a web development intern learning HTML, CSS, and JavaScript.</p>
+    <h3>Projects Completed</h3>
+    <ul>
+      <li>To-Do List App</li>
+      <li>Product Filter Page</li>
+      <li>Portfolio Website</li>
+    </ul>
+  </section>
+
+  <!-- To-Do List Section -->
+  <section id="todo">
+    <h2 style="color: #0077cc;">To-Do List</h2>
+    <div style="max-width: 500px; margin: auto; background: #f0f8ff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc;">
+      <input type="text" id="task" placeholder="Enter a task" style="border: 2px solid #0077cc; border-radius: 5px;">
+      <button onclick="addTask()" style="background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Task</button>
+      <ul id="taskList" style="margin-top: 20px;"></ul>
+    </div>
+  </section>
+
+<!-- Product Listing Section -->
+  <section id="products">
+    <h2>Product Listing</h2>
+    <select id="categoryFilter" onchange="filterProducts()">
+      <option value="all">All</option>
+      <option value="electronics">Electronics</option>
+      <option value="books">Books</option>
+    </select>
+    <select id="sortOption" onchange="sortProducts()">
+      <option value="default">Sort By</option>
+      <option value="price">Price</option>
+    </select>
+    <div class="products" id="productContainer"></div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact</h2>
+    <form>
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 VARSHU</p>
+  </footer>
+
+  <script>
+    // Products
+    const products = [
+      { name: "Phone", category: "electronics", price: 500 },
+      { name: "Laptop", category: "electronics", price: 1000 },
+      { name: "Book A", category: "books", price: 20 },
+      { name: "Book B", category: "books", price: 15 }
+    ];
+
+    const productContainer = document.getElementById('productContainer');
+
+    function displayProducts(list) {
+      productContainer.innerHTML = '';
+      list.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.innerHTML = `<h4>${p.name}</h4><p>Category: ${p.category}</p><p>Price: $${p.price}</p>`;
+        productContainer.appendChild(div);
+      });
+    }
+
+    function filterProducts() {
+      const category = document.getElementById('categoryFilter').value;
+      const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+      displayProducts(filtered);
+    }
+
+    function sortProducts() {
+      const option = document.getElementById('sortOption').value;
+      let sorted = [...products];
+      if (option === 'price') sorted.sort((a, b) => a.price - b.price);
+      displayProducts(sorted);
+    }
+
+    // To-Do List Logic
+    const taskList = document.getElementById('taskList');
+    const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    savedTasks.forEach(task => renderTask(task));
+
+    function addTask() {
+      const taskInput = document.getElementById('task');
+      const task = taskInput.value.trim();
+      if (task) {
+        renderTask(task);
+        savedTasks.push(task);
+        localStorage.setItem('tasks', JSON.stringify(savedTasks));
+        taskInput.value = '';
+      }
+    }
+
+    function renderTask(task) {
+      const li = document.createElement('li');
+      li.textContent = task;
+      taskList.appendChild(li);
+    }
+
+    // Initial display
+    displayProducts(products);
+  </script>
+</body>
+</html>
